@@ -1,0 +1,365 @@
+#include "pch.h"
+#include <iostream>
+#include <iostream>
+#include <stdlib.h> 
+#include <math.h> 
+
+  //Include OpenGL header files, so that we can use OpenGL
+#ifdef APPLE
+#include <OpenGL/OpenGL.h>
+#include <GLUT/glut.h>
+#else
+#include <GL/glut.h>
+#endif
+
+using namespace std;
+int a, b ,f=0;
+float x1 = 0.701960, yo = 0, z1 = 0.701960, x2 = 0.701960, y2 = 0, z2 = 0.701960,
+x3= 0.701960, y3= 0, z3= 0.701960, x4= 0.701960, y4= 0, z4 = 0.701960;
+
+
+//Initializes 3D rendering
+void initRendering() {
+	//Makes 3D drawing work when something is in front of something else
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_COLOR_MATERIAL);	 //Enable color
+	glClearColor(1, 1, 1, 1);  //Change the background
+	//gluOrtho2D(0, 500, 0, 500);
+	glMatrixMode(GL_PROJECTION);
+
+	//Change the background 
+}
+
+//Called when the window is resized
+void handleResize(int w, int h) {
+	glViewport(0, 0, w, h);
+	glMatrixMode(GL_PROJECTION); //Switch to setting the camera perspective
+	glLoadIdentity(); //Reset the camera
+	gluPerspective(45.0, (double)w / (double)h, //The width-to-height ratio
+		1.0,                   //The near z clipping coordinate
+		200.0);                //The far z clipping coordinate
+}
+void renderbitmap(float x, float y, float z, void *font, char *string) {
+	char *c;
+	glRasterPos3f(x, y, z);
+	for (c = string; *c != '\0'; c++) {
+		glutBitmapCharacter(font, *c);
+	}
+}
+void second_in() {
+	glColor3f(0.0f, 0.0f, 0.0f);
+	char buf[100] = { 0 };
+	sprintf_s(buf, "PRESS 1 OR 0 FOR INPUT 'A & B'");
+	renderbitmap(-40, 30, -100, GLUT_BITMAP_TIMES_ROMAN_24, buf);
+
+
+}
+void in_out() {
+	glColor3f(0.0f, 0.0f, 0.0f);
+	char buf[100] = { 0 };
+	sprintf_s(buf, "A");
+	renderbitmap(-40, 22, -100, GLUT_BITMAP_TIMES_ROMAN_24, buf);
+	sprintf_s(buf, "B");
+	renderbitmap(-40, 12, -100, GLUT_BITMAP_TIMES_ROMAN_24, buf);
+	sprintf_s(buf, "S");
+	renderbitmap(33, 15, -100, GLUT_BITMAP_TIMES_ROMAN_24, buf);
+	sprintf_s(buf, "C");
+	renderbitmap(33, -7, -100, GLUT_BITMAP_TIMES_ROMAN_24, buf);
+
+}
+void run() {
+	if (f == 0) {
+		if (a == 0 && b == 0) {
+			x1 = 0.74501960, yo = 1, z1 = 0.74501960;
+			x2 = 0.74501960, y2 = 1, z2 = 0.74501960;
+
+		}
+		if (a == 0 && b == 1) {
+			x2 = 0.74501960, y2 = 1, z2 = 0.74501960;
+
+			x1 = 0.04501960, yo = 0.04501960, z1 = 0.04501960;
+		}
+		if (a == 1 && b == 0) {
+			x2 = 0.74501960, y2 = 1, z2 = 0.74501960;
+
+			x1 = 0.04501960, yo = 0.04501960, z1 = 0.04501960;
+		}
+		if (a == 1 && b == 1) {
+			x1 = 0.74501960, yo = 1, z1 = 0.74501960;
+
+			x2 = 0.04501960, y2 = 0.04501960, z2 = 0.04501960;
+		}
+	}
+}
+void handleKeypress(unsigned char key, //The key that was pressed
+	int x, int y) {  
+	cout << (int)key;
+	//The current mouse coordinates
+	switch (key) {
+	case 27: //Escape key
+		exit(0); //Exit the program
+	case 48: {
+		if (f == 0) {
+			a = 0;
+			f = 1;
+			x3 = 0.74501960, y3 = 1, z3 = 0.74501960;
+			break;
+		}
+		else {
+			b = 0;
+			f = 0;
+			x4 = 0.74501960, y4 = 1, z4 = 0.74501960;
+			run();
+			//x1 = 0.701960; yo = 0; z1 = 0.701960; x2 = 0.701960; y2 = 0, z2 = 0.701960;
+			//x3 = 0.701960; y3 = 0; z3 = 0.701960; x4 = 0.701960; y4 = 0; z4 = 0.701960;
+			break;
+		}
+	}
+	case 49: {
+		if (f == 0) {
+			a = 1;
+			f = 1;
+			x3 = 0.04501960, y3 = 0.04501960, z3 = 0.04501960;
+
+
+			break;
+		}
+		else {
+			b = 1;
+			f = 0;
+			x4 = 0.04501960, y4 = 0.00451960, z4 = 0.04501960;
+
+			run();
+			//x1 = 0.701960; yo = 0; z1 = 0.701960; x2 = 0.701960; y2 = 0, z2 = 0.701960;
+			//x3 = 0.701960; y3 = 0; z3 = 0.701960; x4 = 0.701960; y4 = 0; z4 = 0.701960;
+
+			break;
+		}
+	}
+
+	}
+}
+
+void drawScene() {
+	//Clear information from last draw
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glMatrixMode(GL_MODELVIEW); //Switch to the drawing perspective
+	glLoadIdentity();
+	 in_out();
+	
+	second_in();
+	////////////////////////////////////////////////////////////////////
+	//***** AND
+	glPushMatrix();
+	glTranslatef(10.0, -5.0, -100.0);
+	glRotatef(270.0, 0.0, 0.0, 1.0);
+	glBegin(GL_POLYGON);
+	const float DEG2RAD = 3.14159 / 180;
+
+	glColor3f(0.701960f, 0.0f, 0.701960f);
+	for (int i = 0; i < 360; i++)
+	{
+
+		float degInRad = i * DEG2RAD;
+		glVertex2f(cos(degInRad) * 5, sin(degInRad) * 5);
+	}
+	glEnd();
+	glPopMatrix();
+	/////////////////////////////////////////////////////////
+	glPushMatrix();
+	glTranslatef(5.0, 0.0, -100.0);
+	glBegin(GL_QUADS);
+	glColor3f(0.701960f, 0.0f, 0.701960f);
+	glVertex3f(5.0f, 0.0f, 0.0f);
+
+	glVertex3f(0, 0, 0);
+	glVertex3f(0, -10, 0);
+
+	glVertex3f(5, -10, 0);
+	glEnd();
+	glPopMatrix();
+	///////////////////////////////////////////
+
+	glPushMatrix();
+	glTranslatef(5.0, 0.0, -100.0);
+	glColor3f(0.701960f, 0.0f, 0.701960f);
+
+	glBegin(GL_LINES);
+	glVertex3f(-20, -1, 0);
+	glVertex3f(0, -1, 0);
+
+	glVertex3f(-25, -9, 0);
+	glVertex3f(0, -9, 0);
+	
+	glVertex3f(-20, -1, 0);
+	glVertex3f(-20, 21, 0);
+
+	glVertex3f(-25, -9, 0);
+	glVertex3f(-25, 14, 0);
+	glEnd();
+	glPopMatrix();
+
+	//////////////////////////////////////////////////////////
+	//*********** XOR
+	glPushMatrix();
+	glTranslatef(0.0, 10.0, -100.0);
+	//glScaled(5, 5, 0);
+	glBegin(GL_POLYGON);
+	glColor3f(0.701960f, 0.0f, 0.701960f);
+	glVertex3f(10, 12.5, 0);
+	glVertex3f(11.2, 12, 0);
+	glVertex3f(12, 11.3, 0);
+	glVertex3f(13, 10.5, 0);
+	glVertex3f(14, 9, 0);
+	glVertex3f(15, 7.5, 0);
+	glVertex3f(14, 6, 0);
+	glVertex3f(13, 5, 0);
+	glVertex3f(12.2, 4.2, 0);
+	glVertex3f(11.2, 3.4, 0);
+	glVertex3f(10, 2.5, 0);
+	glVertex3f(5, 2.5, 0);
+	glVertex3f(5.8, 4.8, 0);
+	glVertex3f(6.5, 7.5, 0);
+	glVertex3f(6.2, 10.2, 0);
+	glVertex3f(5, 12.5, 0);
+
+
+	glEnd();
+	glPopMatrix();
+
+	///////////////////////////////////////////////////
+	glPushMatrix();
+	glTranslatef(0.0, 10.0, -100.0);
+	glBegin(GL_LINES);
+	glColor3f(0.701960f, 0.0f, 0.701960f);
+	glVertex3f(3, 12.5, 0);
+	glVertex3f(4.1, 11, 0);
+	
+
+	glVertex3f(4.7, 9.3, 0);
+	glVertex3f(4.1, 11, 0);
+	
+	glVertex3f(4.7, 9.3, 0);
+	glVertex3f(5, 7.5, 0);
+	
+	glVertex3f(4.7, 6, 0);
+	glVertex3f(5, 7.5, 0);
+	
+	glVertex3f(4.7, 6, 0);
+	glVertex3f(4, 4, 0);
+
+	glVertex3f(3, 2.5, 0);
+	glVertex3f(4, 4, 0);
+	
+	glVertex3f(4.1, 11, 0);
+	glVertex3f(-25, 11, 0);
+
+	glVertex3f(-25, 4, 0);
+	glVertex3f(4, 4, 0);
+	glEnd();
+	glPopMatrix();
+	////////////////////////////////////////////////////////////
+	///** SECOND INPUT
+	glPushMatrix();
+	glTranslatef(-50.0, 27.0, -190.0);
+	glBegin(GL_POLYGON);
+	glColor3f(x4, y4, z4);
+	for (int i = 0; i < 360; i++)
+	{
+
+		float degInRad = i * DEG2RAD;
+		glVertex2f(cos(degInRad) * 3, sin(degInRad) * 3);
+	}
+	glEnd();
+	glPopMatrix();
+	////////////////////////////////////////////////////////////
+	///** FRIST INPUT
+	glPushMatrix();
+	glTranslatef(-50.0, 40.0, -190.0);
+	glBegin(GL_POLYGON);
+	glColor3f(x3, y3, z3);
+	for (int i = 0; i < 360; i++)
+	{
+
+		float degInRad = i * DEG2RAD;
+		glVertex2f(cos(degInRad) * 3, sin(degInRad) * 3);
+	}
+	glEnd();
+	glPopMatrix();
+	//////////////////////////////////////////////////////////////////////
+	///////////////////** OUT PUT
+	glPushMatrix();
+	glTranslatef(50.0, 33.0, -190.0);
+	glBegin(GL_POLYGON);
+	glColor3f(x1,yo, z1);
+	for (int i = 0; i < 360; i++)
+	{
+
+		float degInRad = i * DEG2RAD;
+		glVertex2f(cos(degInRad) * 6, sin(degInRad) * 6);
+	}
+	glEnd();
+	glPopMatrix();
+	//////////////////////////////////////////////////////////////////////
+	///////////////////** OUT PUT
+	glPushMatrix();
+	glTranslatef(50.0, -10.0, -190.0);
+	glBegin(GL_POLYGON);
+	glColor3f(x2, y2, z2);
+	for (int i = 0; i < 360; i++)
+	{
+
+		float degInRad = i * DEG2RAD;
+		glVertex2f(cos(degInRad) * 6, sin(degInRad) * 6);
+	}
+	glEnd();
+	glPopMatrix();
+	///////////////////////////////////////////////////////////////////
+	glPushMatrix();
+	glTranslatef(15.0, -5.0, -100.0);
+	glColor3f(0.701960f, 0.0f, 0.701960f);
+
+	glBegin(GL_LINES);
+	glVertex3f(0,0, 0);
+	glVertex3f(8.5, 0, 0);
+	
+	glEnd();
+	glPopMatrix();
+	///////////////////////////////////////////////////////////////////
+	glPushMatrix();
+	glTranslatef(15.0, 7.0, -100.0);
+	glColor3f(0.701960f, 0.0f, 0.701960f);
+
+	glBegin(GL_LINES);
+	glVertex3f(0, 10, 0);
+	glVertex3f(8.5, 10, 0);
+	glEnd();
+	glPopMatrix();
+	glutSwapBuffers();
+}
+
+void update(int value) {
+
+	glutPostRedisplay();
+	glutTimerFunc(100, update, 0);
+}
+
+int main(int argc, char** argv) {
+
+	//Initialize GLUT
+	glutInit(&argc, argv);
+	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
+	glutInitWindowSize(400, 400); 
+	 
+	glutInitWindowPosition(30, 30);
+
+	glutCreateWindow("HALF_ADDER");
+	initRendering(); 
+	glutDisplayFunc(drawScene);
+
+	glutReshapeFunc(handleResize);
+	glutKeyboardFunc(handleKeypress);
+	glutTimerFunc(25, update, 0); //Add a timer
+	glutMainLoop(); 
+	return 0;
+}
